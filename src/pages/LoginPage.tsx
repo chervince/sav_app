@@ -35,27 +35,6 @@ export function LoginPage() {
         if (signUpError) throw signUpError;
         if (!signUpData.user) throw new Error('Erreur lors de la création du compte');
 
-        // 2. Créer le profil immédiatement
-        const { error: profileError } = await supabase
-          .from('profiles')
-          .insert([
-            {
-              id: signUpData.user.id,
-              name,
-              company,
-              role: 'enfant', // Rôle par défaut
-              created_at: new Date().toISOString(),
-              updated_at: new Date().toISOString()
-            }
-          ])
-          .select()
-          .single();
-
-        if (profileError) {
-          console.error('Erreur création profil:', profileError);
-          throw new Error('Erreur lors de la création du profil');
-        }
-        
         toast.success('Compte créé avec succès');
       } else {
         const { error } = await supabase.auth.signInWithPassword({
